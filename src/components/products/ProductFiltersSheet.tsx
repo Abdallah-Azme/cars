@@ -17,7 +17,7 @@ export function ProductFiltersSheet() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-[320px] sm:w-[380px]">
+      <SheetContent side="left" className="overflow-auto">
         <SheetHeader>
           <SheetDescription asChild>
             <div className="mt-6">
