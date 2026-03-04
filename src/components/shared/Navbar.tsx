@@ -23,12 +23,12 @@ const links = [
   },
   {
     name: "Machines",
-    path: "/machines",
+    path: "/products",
     icon: Van,
   },
   {
     name: "Favorite",
-    path: "/favorite",
+    path: "/favorites",
     icon: Heart,
   },
 ];

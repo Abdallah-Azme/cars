@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function StatsSection() {
   const stats = [
@@ -24,17 +23,17 @@ export default function StatsSection() {
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <Card
+            <div
               key={index}
-              className=" border bg-primary hover:border-red-600 transition-all duration-300 text-center"
+              className="text-center"
             >
-              <CardContent className="py-10">
-                <h3 className="text-4xl md:text-5xl font-bold text-red-600">
+              <div className="py-5">
+                <h3 className="text-xl md:text-3xl font-bold text-red-600">
                   {stat.number}
                 </h3>
-                <p className="mt-3 text-gray-300">{stat.label}</p>
-              </CardContent>
-            </Card>
+                <p className="mt-3 text-primary">{stat.label}</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>

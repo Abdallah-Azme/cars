@@ -17,6 +17,7 @@ type Props = {
   startPrice?: string; // "2,500,000 Yen"
   auctionStatus?: string; // "Not auctioned"
   timeText?: string; // "03/03 11:00"
+  isFavorite?: boolean;
 };
 
 export function ProductCard({
@@ -37,6 +38,7 @@ export function ProductCard({
   startPrice = "2,500,000 Yen",
   auctionStatus = "Not auctioned",
   timeText = "03/03 11:00",
+  isFavorite = false,
 }: Props) {
   return (
     <Link to={`/products/${title}`}>
@@ -63,7 +65,7 @@ export function ProductCard({
               aria-label="Add to favorites"
               title="Add to favorites"
             >
-              <Heart/>
+              <Heart fill={isFavorite ? "red" : "none"} color={isFavorite ? "red" : "black"} />
             </Button>
           </div>
         </div>

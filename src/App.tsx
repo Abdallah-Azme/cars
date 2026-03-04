@@ -1,19 +1,22 @@
-import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/shared/Layout";
+import CategoriesPage from "./pages/CategoriesPage";
+import FavoraitesPage from "./pages/FavoraitesPage";
 import HomePage from "./pages/HomePage";
-import { RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import  RegisterPage from "./pages/RegisterPage";
+import ProductPage from "./pages/ProductPage";
+import RegisterPage from "./pages/RegisterPage";
+import { SingleProductPage } from "./pages/SingleProductPage";
 
 function App() {
   const routers = createBrowserRouter([
     {
       path: "/login",
-      element:<LoginPage/>,
+      element: <LoginPage />,
     },
     {
       path: "/register",
-      element: <RegisterPage/>,
+      element: <RegisterPage />,
     },
     {
       path: "/",
@@ -23,6 +26,22 @@ function App() {
           index: true,
           element: <HomePage />,
         },
+        {
+          path: "/products",
+          element: <ProductPage />,
+        },
+        {
+          path: "/favorites",
+          element: <FavoraitesPage />,
+        },
+        {
+          path: "/categories",
+          element: <CategoriesPage />,
+        },
+        {
+          path: "/products/:id",
+          element: <SingleProductPage />,
+        }
       ],
     },
   ]);
