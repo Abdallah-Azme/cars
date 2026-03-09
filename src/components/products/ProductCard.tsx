@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 type SpecRow = { label: string; value: string };
 
@@ -41,7 +42,6 @@ export function ProductCard({
   isFavorite = false,
 }: Props) {
   return (
-    <Link to={`/products/${title}`}>
     <Card className="overflow-hidden">
       <CardContent className="px-4 py-2">
         {/* Top row: date + grade + favorite */}
@@ -52,9 +52,20 @@ export function ProductCard({
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge variant="secondary"  className="rounded-full size-9 text-base">
+              <Select>
+                <SelectTrigger withIcon={false} className="rounded-full size-9 ">
+                  <SelectValue placeholder={grade} className="text-primary" />
+                </SelectTrigger>
+                <SelectContent position="popper">
+                  <SelectItem value="A">A</SelectItem>
+                  <SelectItem value="B">B</SelectItem>
+                  <SelectItem value="C">C</SelectItem>
+                  <SelectItem value="D">D</SelectItem>
+                </SelectContent>
+              </Select>
+            {/* <Badge variant="secondary"  className="rounded-full size-9 text-base">
               {grade}
-            </Badge>
+            </Badge> */}
 
             {/* Favorite button (no extra libs) */}
             <Button
@@ -75,13 +86,13 @@ export function ProductCard({
         {/* Middle: specs table + image */}
         <div className="flex flex-col gap-4">
           {/* Image */}
-          <div className="relative overflow-hidden rounded-md border bg-muted aspect-4/3">
+          <Link to={`/products/${title}`} className="relative overflow-hidden rounded-md border bg-muted aspect-4/3">
             <img
               src={imageUrl}
               alt={title}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover hover:scale-105 transition-all duration-300"
             />
-          </div>
+          </Link>
           {/* Specs */}
           <div className="rounded-md border bg-muted/20 overflow-hidden">
             <div className="grid grid-cols-[110px_1fr]">
@@ -117,6 +128,5 @@ export function ProductCard({
         </div>
       </CardFooter>
     </Card>
-    </Link>
   );
 }
