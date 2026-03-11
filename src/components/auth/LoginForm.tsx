@@ -1,4 +1,3 @@
-
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -6,17 +5,23 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginApi } from "@/api/auth";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/stores/user";
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+export type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const inputStyle = "h-11! focus-visible:black";
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -24,8 +29,28 @@ export default function LoginForm() {
       password: "",
     },
   });
+  const { isSubmitting } = form.formState;
+  const onSubmit = async (data: LoginFormValues) => {
+    const res = await loginApi(data);
 
-  const onSubmit = (data: LoginFormValues) => console.log(data);
+    console.log(res);
+    if (res?.ok) {
+      const accessToken = res?.data?.data?.accessToken;
+      const user = res?.data?.data?.user;
+      toast.success(res?.data?.message);
+      if (!accessToken) {
+        toast.error("Token not found");
+        return;
+      }
+      setAuth({
+        token: accessToken,
+        user,
+      });
+      navigate("/");
+    } else {
+      toast.error(res?.error);
+    }
+  };
 
   return (
     <FormProvider {...form}>
@@ -72,7 +97,7 @@ export default function LoginForm() {
           </p>
         </div>
         <Button type="submit" className="w-full h-11 ">
-          Login
+          {isSubmitting ? <Loader2 className=" animate-spin" /> : "Login"}
         </Button>
       </form>
     </FormProvider>

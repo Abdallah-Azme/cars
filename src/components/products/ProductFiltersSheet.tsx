@@ -7,8 +7,16 @@ import {
   SheetTrigger
 } from "@/components/ui/sheet";
 import { ProductFilters } from "./ProductFilter";
+import type { FiltersData } from "@/types/vehicles";
+import type { VehicleFilterParams } from "@/api/vehicles";
 
-export function ProductFiltersSheet() {
+export function ProductFiltersSheet({
+  filters,
+  onFilterChange,
+}: {
+  filters: FiltersData;
+  onFilterChange: (params: VehicleFilterParams) => void;
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -21,7 +29,7 @@ export function ProductFiltersSheet() {
         <SheetHeader>
           <SheetDescription asChild>
             <div className="mt-6">
-              <ProductFilters />
+              <ProductFilters filters={filters} onFilterChange={onFilterChange} />
             </div>
           </SheetDescription>
         </SheetHeader>

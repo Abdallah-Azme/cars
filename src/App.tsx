@@ -1,5 +1,12 @@
+import {
+  QueryClient,
+  QueryClientProvider
+} from '@tanstack/react-query';
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Toaster } from "sonner";
 import Layout from "./components/shared/Layout";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
+import PublicRoute from "./components/shared/PuplicRoute";
 import CategoriesPage from "./pages/CategoriesPage";
 import FavoraitesPage from "./pages/FavoraitesPage";
 import HomePage from "./pages/HomePage";
@@ -7,16 +14,15 @@ import LoginPage from "./pages/LoginPage";
 import ProductPage from "./pages/ProductPage";
 import RegisterPage from "./pages/RegisterPage";
 import { SingleProductPage } from "./pages/SingleProductPage";
-
 function App() {
   const routers = createBrowserRouter([
     {
       path: "/login",
-      element: <LoginPage />,
+      element: <PublicRoute> <LoginPage /> </PublicRoute>,
     },
     {
       path: "/register",
-      element: <RegisterPage />,
+      element: <PublicRoute> <RegisterPage /> </PublicRoute>,
     },
     {
       path: "/",
@@ -24,30 +30,36 @@ function App() {
       children: [
         {
           index: true,
-          element: <HomePage />,
+          element:<ProtectedRoute> <HomePage /> </ProtectedRoute>,
         },
         {
           path: "/products",
-          element: <ProductPage />,
+          element: <ProtectedRoute> <ProductPage /> </ProtectedRoute>,
         },
         {
           path: "/favorites",
-          element: <FavoraitesPage />,
+          element: <ProtectedRoute> <FavoraitesPage /> </ProtectedRoute>,
         },
         {
           path: "/categories",
-          element: <CategoriesPage />,
+          element: <ProtectedRoute> <CategoriesPage /> </ProtectedRoute>,
         },
         {
           path: "/products/:id",
-          element: <SingleProductPage />,
+          element: <ProtectedRoute> <SingleProductPage /> </ProtectedRoute>,
         }
       ],
     },
   ]);
+
+  const queryClient = new QueryClient()
+
   return (
     <>
+      <QueryClientProvider client={queryClient}>
+      <Toaster richColors position="bottom-right"/>
       <RouterProvider router={routers} />
+      </QueryClientProvider>
     </>
   );
 }

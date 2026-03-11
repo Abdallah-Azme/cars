@@ -1,14 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Heart,
   Home,
   LayoutPanelTop,
   UserKey,
-  UserPlus,
-  Van,
+  Van
 } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import AuthBtns from "./AuthBtns";
+import { useAuthStore } from "@/stores/user";
+import UserAvatar from "./UserAvatar";
 
 const links = [
   {
@@ -34,6 +35,7 @@ const links = [
 ];
 
 export default function Navbar() {
+  const { token, isAuthenticated } = useAuthStore();
   return (
     <>
       {/* Desktop Navbar */}
@@ -77,23 +79,8 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Auth Buttons */}
-          <div className="flex gap-2">
-            <Link to={"/login"}>
-              <Button
-                variant="ghost"
-                size={"lg"}
-                className="hover:bg-red-700 hover:text-white"
-              >
-                <UserKey /> Login
-              </Button>
-            </Link>
-            <Link to={"/register"}>
-              <Button size={"lg"}>
-                <UserPlus /> Signup
-              </Button>
-            </Link>
-          </div>
+          {/* auth btns */}
+          <AuthBtns />
         </div>
       </nav>
 
@@ -125,7 +112,12 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
-          <NavLink
+
+          {
+            token && isAuthenticated ? (
+              <UserAvatar/>
+            ) : (
+              <NavLink
             key={"login"}
             to={"/login"}
             className={({ isActive }) =>
@@ -148,6 +140,7 @@ export default function Navbar() {
               </>
             )}
           </NavLink>
+            )}
         </div>
       </nav>
     </>
