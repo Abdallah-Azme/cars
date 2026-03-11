@@ -38,7 +38,7 @@ function App() {
         },
         {
           path: "/favorites",
-          element: <ProtectedRoute> <FavoraitesPage /> </ProtectedRoute>,
+          element: <ProtectedRoute> <ProductPage /> </ProtectedRoute>,
         },
         {
           path: "/categories",
