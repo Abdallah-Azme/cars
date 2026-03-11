@@ -1,4 +1,3 @@
-import { ProductsGrid } from "@/components/products/ProductsGrid";
 import EmailSubscription from "@/components/shared/EmailBox";
 import PageHeader from "@/components/shared/PageHeader";
 
@@ -18,7 +17,7 @@ const FavoraitesPage = () => {
             </p>
           </div>
         </div>
-        <ProductsGrid isFavorite />
+        {/* <ProductsGrid isFavorite /> */}
         
       </div>
       <EmailSubscription/>
