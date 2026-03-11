@@ -8,7 +8,6 @@ import Layout from "./components/shared/Layout";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import PublicRoute from "./components/shared/PuplicRoute";
 import CategoriesPage from "./pages/CategoriesPage";
-import FavoraitesPage from "./pages/FavoraitesPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProductPage from "./pages/ProductPage";
@@ -54,6 +53,7 @@ function App() {
 
   const queryClient = new QueryClient()
 
+  
   return (
     <>
       <QueryClientProvider client={queryClient}>
