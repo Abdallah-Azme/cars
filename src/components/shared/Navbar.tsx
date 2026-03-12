@@ -1,4 +1,6 @@
 import { cn } from "@/lib/utils";
+import { useSettingsStore } from "@/stores/settings";
+import { useAuthStore } from "@/stores/user";
 import {
   Heart,
   Home,
@@ -8,9 +10,6 @@ import {
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import AuthBtns from "./AuthBtns";
-import { useAuthStore } from "@/stores/user";
-import UserAvatar from "./UserAvatar";
-import { useSettingsStore } from "@/stores/settings";
 
 const links = [
   {
