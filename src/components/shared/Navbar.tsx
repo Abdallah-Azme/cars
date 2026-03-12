@@ -10,6 +10,7 @@ import { Link, NavLink } from "react-router-dom";
 import AuthBtns from "./AuthBtns";
 import { useAuthStore } from "@/stores/user";
 import UserAvatar from "./UserAvatar";
+import { useSettingsStore } from "@/stores/settings";
 
 const links = [
   {
@@ -36,16 +37,18 @@ const links = [
 
 export default function Navbar() {
   const { token, isAuthenticated } = useAuthStore();
+  const settings = useSettingsStore((state) => state.settings);
+
   return (
     <>
       {/* Desktop Navbar */}
       <nav className="hidden md:block   border-b bg-background sticky top-0 left-0 right-0 z-50">
         <div className="container flex items-center justify-between">
           {/* Logo */}
-          <Link to={"/"} className="text-xl font-bold">
+          <Link to={"/"} className="text-xl font-bold flex items-center gap-2">
             <img
-              src="/logo-icon.jpeg"
-              alt="logo"
+              src={settings?.siteLogo || "/logo-icon.jpeg"}
+              alt={settings?.siteName || "logo"}
               className="size-20 object-contain"
             />
           </Link>
@@ -115,7 +118,31 @@ export default function Navbar() {
 
           {
             token && isAuthenticated ? (
-              <UserAvatar/>
+              <>
+              <NavLink
+            key={"profile"}
+            to={"/profile"}
+            className={({ isActive }) =>
+              cn(
+                "group text-sm font-medium flex flex-col items-center hover:text-primary",
+                isActive ? "text-primary" : "text-muted-foreground",
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <UserKey
+                  size={20}
+                  className={cn(
+                    "transition-colors group-hover:text-red-700",
+                    isActive && "text-red-700",
+                  )}
+                />
+                Profile
+              </>
+            )}
+          </NavLink>
+              </>
             ) : (
               <NavLink
             key={"login"}

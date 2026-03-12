@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,56 +9,35 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/user";
 import { Link } from "react-router-dom";
-import { Loader2, LogOut } from "lucide-react";
-import { logoutApi } from "@/api/auth";
-import { toast } from "sonner";
-import { useState } from "react";
+import LogoutBtn from "./LogoutBtn";
 
 const UserAvatar = () => {
-  const { user, logout } = useAuthStore();
-  const [loading, setLoading] = useState(false);
-  const handleLogout = async () => {
-    setLoading(true);
-    const res = await logoutApi();
-    if (res?.ok) {
-      toast.success(res?.data?.message);
-      logout();
-    } else {
-      toast.error(res?.error);
-    }
-    setLoading(false);
-  };
+  const { user } = useAuthStore();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="lg:size-10 size-8">
-          <AvatarImage src={""} />
-          <AvatarFallback className="bg-red-700 text-white">
-            {user?.name.charAt(0).toUpperCase()}{" "}
-            {user?.name.charAt(1).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-2">
+          <Avatar className="lg:size-10 size-8">
+            <AvatarImage src={user?.avatar || ""} className="object-cover" />
+            <AvatarFallback className="bg-red-700 text-white">
+              {user?.name.charAt(0).toUpperCase()}{" "}
+              {user?.name.charAt(1).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="hidden lg:block">
+            <p className="text-sm font-medium">{user?.name}</p>
+            <p className="text-xs text-red-700 capitalize">{user?.role}</p>
+          </div>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuItem>
-            <Link to={"/"}>Profile</Link>
+            <Link to={"/profile"}>Profile</Link>
           </DropdownMenuItem>
-          <Button
-            onClick={handleLogout}
-            variant="destructive"
-            size={"sm"}
-            className="w-full"
-          >
-            {loading ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <>
-                <LogOut /> Logout
-              </>
-            )}
-          </Button>
+          <LogoutBtn />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -76,6 +76,10 @@ export type VehicleData = {
   images: VehicleImage[];
 };
 
+export type SingleVehicleResponse = {
+  message:string
+  data: VehicleData
+}
 
 export type AuctionSummaryItem = {
   auctionDay: string;

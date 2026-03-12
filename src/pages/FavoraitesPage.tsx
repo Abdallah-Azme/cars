@@ -1,7 +1,23 @@
+import { getFavApi } from "@/api/favorites";
+import { FavCard } from "@/components/products/FavCard";
 import EmailSubscription from "@/components/shared/EmailBox";
 import PageHeader from "@/components/shared/PageHeader";
+import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 const FavoraitesPage = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["favorites"],
+    queryFn: () => getFavApi(),
+  });
+
+  const vehicles = data?.data?.data ?? [];
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
   return (
     <>
       <PageHeader title="Favorites" />
@@ -17,10 +33,22 @@ const FavoraitesPage = () => {
             </p>
           </div>
         </div>
-        {/* <ProductsGrid isFavorite /> */}
-        
+
+        {vehicles.length === 0 ? (
+          <div className="flex justify-center items-center py-12">
+            <p className="text-2xl font-bold text-red-600">
+              No favorites found
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {vehicles.map((vehicle) => (
+              <FavCard key={vehicle.id} vehicle={vehicle} />
+            ))}
+          </div>
+        )}
       </div>
-      <EmailSubscription/>
+      <EmailSubscription />
     </>
   );
 };

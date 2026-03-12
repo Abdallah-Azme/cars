@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Carousel,
   CarouselContent,
@@ -9,16 +7,19 @@ import {
 } from "@/components/ui/carousel";
 
 import CategoryCard from "./CategoryCard";
+import { getCategoriesApi } from "@/api/categories";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CategorySection() {
-  const categories =Array.from({length:10}).map((_,i)=>{
-    return{
-      title: `Category ${i+1}`,
-      image: "/cat.png",
-    }
-  })
-  
 
+  
+const {data}=useQuery({
+  queryKey:["categories"],
+  queryFn:()=>getCategoriesApi(),
+})
+  
+  console.log(data);
+  const categories=data?.data?.data??[];
 
   return (
     <section className="bg-primary py-20">
@@ -46,7 +47,7 @@ export default function CategorySection() {
                 key={index}
                 className="basis-1/2 sm:basis-1/2 lg:basis-1/3 xl:basis-1/6"
               >
-                <CategoryCard {...category} />
+                <CategoryCard category={category} />
               </CarouselItem>
             ))}
           </CarouselContent>

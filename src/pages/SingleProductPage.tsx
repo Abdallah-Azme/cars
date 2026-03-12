@@ -16,59 +16,72 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Heart } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getSingleVehicleApi } from "@/api/vehicles";
 
-type SpecRow = { label: string; value: string };
+export function SingleProductPage() {
+  const { id } = useParams();
 
-type Props = {
-  dateText?: string; // "03/03(Tue) Machinery"
-  title?: string; // "WHEEL LOADER CAT"
-  images?: string[];
-  grade?: "A" | "B" | "C" | "D";
-  specs?: SpecRow[];
-  startPrice?: string; // "2,500,000 Yen"
-  auctionStatus?: string; // "Not auctioned"
-  timeText?: string; // "03/03 11:00"
-  description?: string;
-};
+  const { data, isLoading } = useQuery({
+    queryKey: ["vehicle", id],
+    queryFn: () => getSingleVehicleApi(id!),
+    enabled: !!id,
+  });
 
-export function SingleProductPage({
-  dateText = "03/03(Tue) Machinery",
-  title = "WHEEL LOADER CAT",
-  images = ["/hero.jpg", "/hero.jpg", "/hero.jpg"],
-  grade = "B",
-  specs = [
-    { label: "Model", value: "950F" },
-    { label: "Year", value: "H09" },
-    { label: "Hours", value: "5,741 hr" },
-    { label: "SerialNo", value: "4DJ03710" },
-    { label: "Size", value: "MEDIUM" },
-    { label: "Inspection", value: "—" },
-    { label: "Specification", value: "Cabin / Piping" },
-    { label: "FuelType", value: "D" },
-  ],
-  startPrice = "2,500,000 Yen",
-  auctionStatus = "Not auctioned",
-  timeText = "03/03 11:00",
-  description = "Simple description about the product condition, notes, and any important details.",
-}: Props) {
+  if (isLoading) {
+    return (
+      <div className="flex h-[70vh] items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-red-600" />
+      </div>
+    );
+  }
+
+  const vehicle = data?.data?.data;
+
+  if (!vehicle) {
+    return (
+      <div className="flex h-[70vh] items-center justify-center font-bold">
+        Vehicle Not Found
+      </div>
+    );
+  }
+
+  const title = `${vehicle.maker} ${vehicle.model}`;
+  const images = vehicle.images?.map((img) => img.image_url);
+  
+  const specs = [
+    { label: "Model", value: vehicle.model || "—" },
+    { label: "Year", value: vehicle.year || "—" },
+    { label: "Hours", value: vehicle.workingHours ? `${vehicle.workingHours} hr` : "—" },
+    { label: "Lot Number", value: vehicle.lotNumber || "—" },
+    { label: "Size", value: vehicle.vehicleSize || "—" },
+    { label: "Inspection", value: vehicle.inspection || "—" },
+    { label: "Transmission", value: vehicle.transmission || "—" },
+    { label: "Fuel Type", value: vehicle.fuel || "—" },
+    { label: "Equipment", value: vehicle.equipment || "—" },
+    { label: "Odometer", value: vehicle.odometer || "—" },
+    { label: "Color", value: vehicle.color || "—" },
+  ];
+
   return (
     <>
-      <PageHeader title="Product Name" />
+      <PageHeader title={title} />
       <div className="space-y-5 container my-12">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
             <h1 className="text-3xl font-bold">{title}</h1>
-            <div className="text-muted-foreground">{dateText}</div>
+            <div className="text-muted-foreground">{vehicle.auctionDay}</div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="rounded-full px-3">
-                Grade {grade}
+                Grade {vehicle.score || "—"}
               </Badge>
               <Badge variant="outline" className="font-normal">
-                {auctionStatus}
+                {vehicle.status}
               </Badge>
-              <span className="text-xs text-muted-foreground">{timeText}</span>
+              <span className="text-xs text-muted-foreground">{new Date(vehicle.holdingDate).toLocaleDateString()}</span>
             </div>
           </div>
 
@@ -81,10 +94,6 @@ export function SingleProductPage({
               title="Add to favorites"
             >
               <Heart />
-            </Button>
-
-            <Button className="bg-red-600 hover:bg-red-700">
-              Request / Buy
             </Button>
           </div>
         </div>
@@ -106,7 +115,7 @@ export function SingleProductPage({
                         <img
                           src={src}
                           alt={`${title} image ${i + 1}`}
-                          className="object-cover"
+                          className="object-contain w-full h-[400px]"
                         />
                       </div>
                     </CarouselItem>
@@ -151,10 +160,10 @@ export function SingleProductPage({
             <Card>
               <CardContent className="p-4">
                 <div className="text-xs text-muted-foreground">Start price</div>
-                <div className="mt-1 text-lg font-semibold">{startPrice}</div>
+                <div className="mt-1 text-lg font-semibold">{vehicle.startPrice}</div>
                 <Separator className="my-3" />
                 <div className="text-xs text-muted-foreground">Status</div>
-                <div className="mt-1 text-sm">{auctionStatus}</div>
+                <div className="mt-1 text-sm">{vehicle.status}</div>
               </CardContent>
             </Card>
           </div>
@@ -164,11 +173,11 @@ export function SingleProductPage({
         <Card>
           <CardHeader>
             <div className="text-sm font-semibold text-red-600">
-              Description
+              Description / Equipment
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-sm text-muted-foreground">{vehicle.equipment || "No description available."}</p>
           </CardContent>
         </Card>
       </div>

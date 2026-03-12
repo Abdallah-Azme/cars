@@ -48,3 +48,16 @@ export type LoginResponse = {
     }
 }
 
+export type UpdateProfileResponse = {
+    success: boolean | string;
+    message: string;
+    data: {
+        user: User;
+    };
+};
+
+export type ChangePasswordResponse = {
+    success: boolean | string;
+    message: string;
+    data: null
+};

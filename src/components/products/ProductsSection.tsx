@@ -2,16 +2,18 @@ import { getFiltersApi, getVehiclesApi, type VehicleFilterParams } from "@/api/v
 import { defaultFilters } from "@/types/vehicles";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { PaginationControls } from "./Pagination";
 import { ProductFilters } from "./ProductFilter";
 import { ProductFiltersSheet } from "./ProductFiltersSheet";
 import { ProductsGrid } from "./ProductsGrid";
 
 export function ProductSection() {
   const [filterParams, setFilterParams] = useState<VehicleFilterParams>({});
+  const [page, setPage] = useState(1);
 
   const { data } = useQuery({
-    queryKey: ["vehicles", filterParams],
-    queryFn: () => getVehiclesApi(filterParams),
+    queryKey: ["vehicles", filterParams, page],
+    queryFn: () => getVehiclesApi({ ...filterParams, page }),
   });
   const { data: filtersData } = useQuery({
     queryKey: ["filters"],
@@ -19,7 +21,14 @@ export function ProductSection() {
   });
 
   const vehicles = data?.data?.data?.vehicles ?? [];
+  const pagination = data?.data?.data?.pagination;
   const filters = filtersData?.data?.data ?? defaultFilters;
+
+  // Reset to page 1 whenever filters change
+  const handleFilterChange = (params: VehicleFilterParams) => {
+    setFilterParams(params);
+    setPage(1);
+  };
 
   return (
     <section className="container py-20">
@@ -38,7 +47,7 @@ export function ProductSection() {
         <div className="md:hidden">
           <ProductFiltersSheet
             filters={filters}
-            onFilterChange={setFilterParams}
+            onFilterChange={handleFilterChange}
           />
         </div>
       </div>
@@ -49,7 +58,7 @@ export function ProductSection() {
           <div className="sticky top-30 rounded-lg border p-4">
             <ProductFilters
               filters={filters}
-              onFilterChange={setFilterParams}
+              onFilterChange={handleFilterChange}
             />
           </div>
         </aside>
@@ -63,12 +72,21 @@ export function ProductSection() {
             </span>{" "}
             products
           </div>
+
           {vehicles?.length === 0 ? (
             <div className="text-sm text-muted-foreground">
               No Vehicles Found
             </div>
           ) : (
             <ProductsGrid vehicles={vehicles} />
+          )}
+
+          {/* Pagination */}
+          {pagination && (
+            <PaginationControls
+              pagination={pagination}
+              onPageChange={setPage}
+            />
           )}
         </div>
       </div>

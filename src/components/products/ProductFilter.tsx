@@ -27,7 +27,7 @@ function ChecklistBox({
   items,
   selectedItems,
   onToggle,
-  height = "auto",
+
 }: {
   items: string[];
   selectedItems: string[];
@@ -36,7 +36,7 @@ function ChecklistBox({
 }) {
   return (
     <div className="rounded-md border bg-background">
-      <ScrollArea style={{ height }} className="p-3">
+      <ScrollArea  className="p-3 max-h-96 overflow-y-auto">
         <div className="space-y-2">
           {items.map((item) => {
             const id = item.replace(/\s+/g, "-").toLowerCase();

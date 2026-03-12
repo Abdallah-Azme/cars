@@ -1,10 +1,13 @@
 "use client";
 
+import { newsletterApi } from "@/api/newsletter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-interface FormData {
+export interface EmailFormData {
   email: string;
 }
 
@@ -14,11 +17,20 @@ export default function EmailSubscription() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>();
+    formState: { isSubmitting },
+  } = useForm<EmailFormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    reset();
+
+  const onSubmit = async (data: EmailFormData) => {
+    const res = await newsletterApi(data);
+    if (res?.ok) {
+      toast.success(res?.data?.message);
+      reset();
+    }
+    else {
+      toast.error(res?.error);
+    }
+
   };
 
   return (
@@ -62,8 +74,9 @@ export default function EmailSubscription() {
               <Button
                 type="submit"
                 className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8"
+                disabled={isSubmitting}
               >
-                Subscribe
+                {isSubmitting ? <Loader2 className="animate-spin"/> : "Subscribe"}
               </Button>
             </form>
           </div>

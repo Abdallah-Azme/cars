@@ -3,14 +3,13 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { VehicleData } from "@/types/vehicles";
 import { Link } from "react-router-dom";
-import AddToFavBtn from "./AddToFavBtn";
+import RemoveFromFavBtn from "./RemoveFromFavBtn";
 
 type Props = {
-  isFavorite?: boolean;
   vehicle: VehicleData;
 };
 
-export function ProductCard({ vehicle }: Props) {
+export function FavCard({ vehicle }: Props) {
   const labels = [
     { label: "Vehicle Type", value: vehicle?.vehicleType },
     { label: "Chassis Id", value: vehicle?.chassisId },
@@ -37,7 +36,7 @@ export function ProductCard({ vehicle }: Props) {
           </div>
 
           <div className="flex items-center gap-2">
-            <AddToFavBtn  id={vehicle?.id}/>
+            <RemoveFromFavBtn id={vehicle?.id} />
           </div>
         </div>
 
