@@ -13,6 +13,8 @@ export type VehicleFilterParams = {
   scoreFrom?: string;
   scoreTo?: string;
   page?: number;
+  holdingDate?: string;
+  per_page?: number;
 };
 
 export const getVehiclesApi = (params?: VehicleFilterParams) => {
@@ -27,6 +29,8 @@ export const getVehiclesApi = (params?: VehicleFilterParams) => {
   if (params?.hourTo) query.set("working_hours_max", params.hourTo);
   if (params?.scoreFrom) query.set("score", params.scoreFrom);
   if (params?.page) query.set("page", String(params.page));
+  if (params?.per_page) query.set("per_page", String(params.per_page));
+  if (params?.holdingDate) query.set("holding_date", params.holdingDate);
   const qs = query.toString();
   return apiRequest<VehicleSResponse>(`/vehicles${qs ? `?${qs}` : ""}`, {
     method: "get",

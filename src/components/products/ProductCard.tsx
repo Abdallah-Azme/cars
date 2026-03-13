@@ -51,7 +51,7 @@ export function ProductCard({ vehicle }: Props) {
             className="relative overflow-hidden rounded-md border bg-muted aspect-4/3"
           >
             <img
-              src={vehicle?.images[0].image_url}
+              src={vehicle?.images?.[0]?.image_url || "/placeholder.svg"}
               alt={"product"}
               className="h-full w-full object-cover hover:scale-105 transition-all duration-300"
             />

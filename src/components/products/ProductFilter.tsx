@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Trash } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { FiltersData } from "@/types/vehicles";
 import type { VehicleFilterParams } from "@/api/vehicles";
 
@@ -127,25 +127,21 @@ export function ProductFilters({
   const [scoreFrom, setScoreFrom] = useState<string>();
   const [scoreTo, setScoreTo] = useState<string>();
 
-  const notify = useCallback(
-    (overrides: Partial<VehicleFilterParams>) => {
-      onFilterChange({
-        makers: selectedMakers,
-        models: selectedModels,
-        types: selectedTypes,
-        sizes: selectedSizes,
-        yearFrom,
-        yearTo,
-        hourFrom,
-        hourTo,
-        scoreFrom,
-        scoreTo,
-        ...overrides,
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedMakers, selectedModels, selectedTypes, selectedSizes, yearFrom, yearTo, hourFrom, hourTo, scoreFrom, scoreTo],
-  );
+  const notify = (overrides: Partial<VehicleFilterParams>) => {
+    onFilterChange({
+      makers: selectedMakers,
+      models: selectedModels,
+      types: selectedTypes,
+      sizes: selectedSizes,
+      yearFrom,
+      yearTo,
+      hourFrom,
+      hourTo,
+      scoreFrom,
+      scoreTo,
+      ...overrides,
+    });
+  };
 
   const toggleItem = (
     value: string,

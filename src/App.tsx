@@ -1,7 +1,4 @@
-import {
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import Layout from "./components/shared/Layout";
@@ -17,16 +14,25 @@ import { getSettingsApi } from "./api/settings";
 import { useSettingsStore } from "./stores/settings";
 import { useEffect } from "react";
 import { DynamicHead } from "./components/shared/DynamicHead";
-import NotFoundPage from './pages/NotfoundPage';
-import ProtectedRoute from './components/shared/ProtectedRoute';
-import FavoraitesPage from './pages/FavoraitesPage';
+import NotFoundPage from "./pages/NotfoundPage";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
+import FavoraitesPage from "./pages/FavoraitesPage";
+import DashboardLayout from "./dashboard/components/shared/Layout";
+import DashboardLoginPage from "./dashboard/pages/LoginPage";
+import DashboardProductPage from "./dashboard/pages/ProductPage";
+import { SingleProductPage as DashboardSingleProductPage } from "./dashboard/pages/SingleProductPage";
+import DashboardCategoriesPage from "./dashboard/pages/CategoriesPage";
+import DashboardUsersPage from "./dashboard/pages/UsersPage";
+
+import DashboardPublicRoute from "./dashboard/components/shared/DashboardPublicRoute";
+import DashboardProtectedRoute from "./dashboard/components/shared/DashboardProtectedRoute";
+
 function App() {
   const routers = createBrowserRouter([
     {
       path: "/login",
       element: (
         <PublicRoute>
-          {" "}
           <LoginPage />{" "}
         </PublicRoute>
       ),
@@ -35,7 +41,6 @@ function App() {
       path: "/register",
       element: (
         <PublicRoute>
-          {" "}
           <RegisterPage />{" "}
         </PublicRoute>
       ),
@@ -54,7 +59,11 @@ function App() {
         },
         {
           path: "/favorites",
-          element:<ProtectedRoute><FavoraitesPage /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <FavoraitesPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/categories",
@@ -71,6 +80,40 @@ function App() {
               <ProfilePage />
             </ProtectedRoute>
           ),
+        },
+      ],
+    },
+    {
+      path: "/dashboard/login",
+      element: (
+        <DashboardPublicRoute>
+          <DashboardLoginPage />
+        </DashboardPublicRoute>
+      ),
+    },
+    {
+      path: "/dashboard",
+      element: (
+        <DashboardProtectedRoute>
+          <DashboardLayout />
+        </DashboardProtectedRoute>
+      ),
+      children: [
+        {
+          index: true,
+          element: <DashboardProductPage />,
+        },
+        {
+          path: "categories",
+          element: <DashboardCategoriesPage />,
+        },
+        {
+          path: "products/:id",
+          element: <DashboardSingleProductPage />,
+        },
+        {
+          path: "users",
+          element: <DashboardUsersPage />,
         },
       ],
     },
@@ -101,8 +144,8 @@ function App() {
     <>
       <DynamicHead />
       <QueryClientProvider client={queryClient}>
-      <Toaster richColors position="bottom-right"/>
-      <RouterProvider router={routers} />
+        <Toaster richColors position="bottom-right" />
+        <RouterProvider router={routers} />
       </QueryClientProvider>
     </>
   );

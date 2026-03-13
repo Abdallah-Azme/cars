@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import AddToFavBtn from "@/components/products/AddToFavBtn";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Heart, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getSingleVehicleApi } from "@/api/vehicles";
@@ -85,16 +85,9 @@ export function SingleProductPage() {
             </div>
           </div>
 
-          {/* Favorite + CTA (UI only) */}
+          {/* Favorite + CTA */}
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              className="gap-2"
-              aria-label="Add to favorites"
-              title="Add to favorites"
-            >
-              <Heart />
-            </Button>
+            <AddToFavBtn id={vehicle.id} />
           </div>
         </div>
 
