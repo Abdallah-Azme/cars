@@ -9,7 +9,7 @@ export default function Hero() {
     <section
       className="relative md:h-[90vh] h-screen text-white bg-no-repeat bg-center bg-cover"
       style={{
-        backgroundImage: `url('${settings?.heroImage || "/hero.jpg"}')`,
+        backgroundImage: `url("${settings?.heroImage || "/hero.jpg"}")`,
       }}
     >
       {/* Background */}

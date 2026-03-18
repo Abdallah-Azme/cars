@@ -21,7 +21,7 @@ const FavoraitesPage = () => {
   return (
     <>
       <PageHeader title="Favorites" />
-      <div className="container py-20 flex flex-col gap-10">
+      <div className="container py-10 flex flex-col gap-10">
         <div className="flex flex-col gap-4">
           {/* Header */}
           <div className=" flex flex-col gap-2 ">

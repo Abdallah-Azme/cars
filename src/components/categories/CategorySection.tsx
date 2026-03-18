@@ -11,22 +11,23 @@ import { getCategoriesApi } from "@/api/categories";
 import { useQuery } from "@tanstack/react-query";
 
 export default function CategorySection() {
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategoriesApi(),
+  });
 
-  
-const {data}=useQuery({
-  queryKey:["categories"],
-  queryFn:()=>getCategoriesApi(),
-})
-  
   console.log(data);
-  const categories=data?.data?.data??[];
+  const categories = data?.data?.data ?? [];
 
   return (
-    <section className="bg-primary py-20">
+    <section className="bg-primary py-10">
       <div className="container">
         {/* Slider */}
-        <Carousel opts={{ align: "start", loop: true }} className="w-full flex flex-col  gap-12">
-          <div className="flex items-center justify-between md:flex-row flex-col gap-4"> 
+        <Carousel
+          opts={{ align: "start", loop: true }}
+          className="w-full flex flex-col  gap-12"
+        >
+          <div className="flex items-center justify-between md:flex-row flex-col gap-4">
             {/* Header */}
             <div className=" flex flex-col gap-2 ">
               <h2 className="text-4xl md:text-5xl font-bold text-red-600">

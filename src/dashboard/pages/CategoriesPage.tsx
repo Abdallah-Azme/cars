@@ -17,11 +17,14 @@ const CategoriesPage = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-red-700"> Equipment Categories</h1>
+        <h1 className="text-2xl font-bold text-red-700">
+          {" "}
+          Equipment Categories
+        </h1>
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20">
+        <div className="flex items-center justify-center py-10">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-700"></div>
         </div>
       ) : (

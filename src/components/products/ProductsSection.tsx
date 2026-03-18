@@ -1,4 +1,8 @@
-import { getFiltersApi, getVehiclesApi, type VehicleFilterParams } from "@/api/vehicles";
+import {
+  getFiltersApi,
+  getVehiclesApi,
+  type VehicleFilterParams,
+} from "@/api/vehicles";
 import { defaultFilters } from "@/types/vehicles";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -31,7 +35,7 @@ export function ProductSection() {
   };
 
   return (
-    <section className="container py-20">
+    <section className="container py-10">
       {/* Top bar */}
       <div className="flex flex-col gap-4">
         {/* Header */}
