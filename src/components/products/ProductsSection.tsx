@@ -10,6 +10,7 @@ import { PaginationControls } from "./Pagination";
 import { ProductFilters } from "./ProductFilter";
 import { ProductFiltersSheet } from "./ProductFiltersSheet";
 import { ProductsGrid } from "./ProductsGrid";
+import { HorizontalFilterRow } from "./HorizontalFilters";
 
 export function ProductSection() {
   const [filterParams, setFilterParams] = useState<VehicleFilterParams>({});
@@ -30,8 +31,19 @@ export function ProductSection() {
 
   // Reset to page 1 whenever filters change
   const handleFilterChange = (params: VehicleFilterParams) => {
-    setFilterParams(params);
+    setFilterParams((prev) => {
+      // If params is empty, it's a reset - clear everything
+      if (Object.keys(params).length === 0) return {};
+      // Otherwise merge (preserving types/models that might be excluded from some filter components)
+      return { ...prev, ...params };
+    });
     setPage(1);
+  };
+
+  const handleToggle = (key: 'types' | 'models', item: string, checked: boolean) => {
+    const current = filterParams[key] || [];
+    const next = checked ? [...current, item] : current.filter((i) => i !== item);
+    handleFilterChange({ ...filterParams, [key]: next });
   };
 
   return (
@@ -56,13 +68,29 @@ export function ProductSection() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="mt-8 flex flex-col gap-6">
+        <HorizontalFilterRow
+          title="Category"
+          items={filters.types}
+          selectedItems={filterParams.types || []}
+          onToggle={(item, checked) => handleToggle('types', item, checked)}
+        />
+        <HorizontalFilterRow
+          title="Sub-Category"
+          items={filters.models}
+          selectedItems={filterParams.models || []}
+          onToggle={(item, checked) => handleToggle('models', item, checked)}
+        />
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Desktop sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-30 rounded-lg border p-4">
             <ProductFilters
               filters={filters}
               onFilterChange={handleFilterChange}
+              exclude={["types", "models"]}
             />
           </div>
         </aside>

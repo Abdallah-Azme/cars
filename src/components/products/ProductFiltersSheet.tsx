@@ -29,7 +29,11 @@ export function ProductFiltersSheet({
         <SheetHeader>
           <SheetDescription asChild>
             <div className="mt-6">
-              <ProductFilters filters={filters} onFilterChange={onFilterChange} />
+              <ProductFilters 
+                filters={filters} 
+                onFilterChange={onFilterChange} 
+                exclude={["types", "models"]}
+              />
             </div>
           </SheetDescription>
         </SheetHeader>

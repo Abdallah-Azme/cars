@@ -111,9 +111,11 @@ function RangeSelect({
 export function ProductFilters({
   filters,
   onFilterChange,
+  exclude = [],
 }: {
   filters: FiltersData;
   onFilterChange: (params: VehicleFilterParams) => void;
+  exclude?: string[];
 }) {
   const [selectedMakers, setSelectedMakers] = useState<string[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
@@ -128,7 +130,7 @@ export function ProductFilters({
   const [scoreTo, setScoreTo] = useState<string>();
 
   const notify = (overrides: Partial<VehicleFilterParams>) => {
-    onFilterChange({
+    const params: VehicleFilterParams = {
       makers: selectedMakers,
       models: selectedModels,
       types: selectedTypes,
@@ -140,7 +142,14 @@ export function ProductFilters({
       scoreFrom,
       scoreTo,
       ...overrides,
+    };
+
+    // Remove excluded fields to avoid overwriting parent state
+    exclude.forEach((field) => {
+      delete (params as Record<string, any>)[field];
     });
+
+    onFilterChange(params);
   };
 
   const toggleItem = (
@@ -187,7 +196,7 @@ export function ProductFilters({
       <Separator />
 
       <div className="flex flex-col gap-6">
-        {!!filters.types.length && (
+        {!exclude.includes("types") && !!filters.types.length && (
           <div className="space-y-3">
             <SectionTitle title="Category" />
             <ChecklistBox
@@ -200,7 +209,7 @@ export function ProductFilters({
           </div>
         )}
 
-        {!!filters.models.length && (
+        {!exclude.includes("models") && !!filters.models.length && (
           <div className="space-y-3">
             <SectionTitle title="Model" />
             <ChecklistBox
