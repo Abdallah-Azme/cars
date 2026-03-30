@@ -112,6 +112,7 @@ export function ProductSection() {
         />
         <HorizontalFilterRow
           title="Sub-Category"
+          variant="grid"
           items={filters.models}
           selectedItems={filterParams.models || []}
           onToggle={(item, checked) => handleToggle('models', item, checked)}
