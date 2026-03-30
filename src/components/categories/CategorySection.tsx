@@ -16,7 +16,6 @@ export default function CategorySection() {
     queryFn: () => getCategoriesApi(),
   });
 
-  console.log(data);
   const categories = data?.data?.data ?? [];
 
   return (

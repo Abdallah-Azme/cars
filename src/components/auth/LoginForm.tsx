@@ -33,7 +33,6 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     const res = await loginApi(data);
 
-    console.log(res);
     if (res?.ok) {
       const accessToken = res?.data?.data?.accessToken;
       const user = res?.data?.data?.user;

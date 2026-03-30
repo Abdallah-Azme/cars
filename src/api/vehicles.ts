@@ -13,8 +13,11 @@ export type VehicleFilterParams = {
   scoreFrom?: string;
   scoreTo?: string;
   page?: number;
+  results?: string[];
   holdingDate?: string;
   per_page?: number;
+  parentCategoryIds?: string[];
+  childCategoryIds?: string[];
 };
 
 export const getVehiclesApi = (params?: VehicleFilterParams) => {
@@ -23,6 +26,9 @@ export const getVehiclesApi = (params?: VehicleFilterParams) => {
   if (params?.models?.length) params.models.forEach((v) => query.append("selection_model", v));
   if (params?.types?.length) params.types.forEach((v) => query.append("vehicle_type", v));
   if (params?.sizes?.length) params.sizes.forEach((v) => query.append("vehicle_size", v));
+  if (params?.results?.length) params.results.forEach((v) => query.append("result[]", v));
+  if (params?.parentCategoryIds?.length) params.parentCategoryIds.forEach((v) => query.append("parent_category_id[]", v));
+  if (params?.childCategoryIds?.length) params.childCategoryIds.forEach((v) => query.append("child_category_id[]", v));
   if (params?.yearFrom) query.set("year_min", params.yearFrom);
   if (params?.yearTo) query.set("year_max", params.yearTo);
   if (params?.hourFrom) query.set("working_hours_min", params.hourFrom);
@@ -44,3 +50,11 @@ export const getSingleVehicleApi = (id: string) =>
   apiRequest<SingleVehicleResponse>(`/vehicles/${id}`, {
     method: "get",
   });
+
+export const getModelsApi = (childCategoryIds: string[]) => {
+  const query = new URLSearchParams();
+  childCategoryIds.forEach((id) => query.append("child_category_id[]", id));
+  return apiRequest<import("@/types/vehicles").ModelsResponse>(`/models?${query.toString()}`, {
+    method: "get",
+  });
+};

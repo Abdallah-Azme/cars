@@ -51,11 +51,10 @@ export default function RegisterForm() {
       role: "",
     },
   });
-const {isSubmitting} = form.formState;
+  const { isSubmitting } = form.formState;
   const onSubmit = async (data: RegisterFormValues) => {
     const res = await registerApi(data);
-    console.log(res);
-    
+
     if (res?.ok) {
       toast.success(res?.data?.message);
       navigate("/login");
@@ -166,7 +165,7 @@ const {isSubmitting} = form.formState;
           </p>
         </div>
         <Button type="submit" className="w-full h-11">
-          {isSubmitting ? <Loader2 className="animate-spin"/> : "Signup"}
+          {isSubmitting ? <Loader2 className="animate-spin" /> : "Signup"}
         </Button>
       </form>
     </FormProvider>

@@ -6,6 +6,7 @@ import {
 import { defaultFilters } from "@/types/vehicles";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PaginationControls } from "./Pagination";
 import { ProductFilters } from "./ProductFilter";
 import { ProductFiltersSheet } from "./ProductFiltersSheet";
@@ -13,21 +14,55 @@ import { ProductsGrid } from "./ProductsGrid";
 import { HorizontalFilterRow } from "./HorizontalFilters";
 
 export function ProductSection() {
+  const [searchParams] = useSearchParams();
   const [filterParams, setFilterParams] = useState<VehicleFilterParams>({});
   const [page, setPage] = useState(1);
 
   const { data } = useQuery({
-    queryKey: ["vehicles", filterParams, page],
-    queryFn: () => getVehiclesApi({ ...filterParams, page }),
+    queryKey: ["vehicles", filterParams, page, searchParams.toString()],
+    queryFn: () => {
+      const parentId = searchParams.get("parentId");
+      const childId = searchParams.get("childId");
+      const mergedParams = { ...filterParams };
+      if (parentId && !mergedParams.parentCategoryIds) {
+        mergedParams.parentCategoryIds = [parentId];
+      }
+      if (childId && !mergedParams.childCategoryIds) {
+        mergedParams.childCategoryIds = [childId];
+      }
+      return getVehiclesApi({ ...mergedParams, page });
+    },
   });
+
   const { data: filtersData } = useQuery({
-    queryKey: ["filters"],
-    queryFn: getFiltersApi,
+    queryKey: ["filters", filterParams.childCategoryIds, searchParams.get("childId")],
+    queryFn: async () => {
+      const childId = searchParams.get("childId");
+      const currentChildIds = filterParams.childCategoryIds || (childId ? [childId] : []);
+
+      if (currentChildIds.length > 0) {
+        const { getModelsApi } = await import("@/api/vehicles");
+        const res = await getModelsApi(currentChildIds as string[]);
+        if (res.ok && res.data?.data) {
+          const apiData = res.data.data;
+          // Map objects to strings as HorizontalFilters expects string[]
+          return {
+            ...defaultFilters,
+            models: apiData.models?.map((m) => m.name) || [],
+            types: apiData.types?.map((t) => t.title) || [],
+            results: apiData.results || [],
+          };
+        }
+      }
+
+      const res = await getFiltersApi();
+      return res.data?.data ?? defaultFilters;
+    },
   });
 
   const vehicles = data?.data?.data?.vehicles ?? [];
   const pagination = data?.data?.data?.pagination;
-  const filters = filtersData?.data?.data ?? defaultFilters;
+  const filters = filtersData ?? defaultFilters;
 
   // Reset to page 1 whenever filters change
   const handleFilterChange = (params: VehicleFilterParams) => {

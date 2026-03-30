@@ -59,29 +59,27 @@ export default function ProfileInfoForm() {
     fileInputRef.current?.click();
   };
 
-async function onSubmit(values: z.infer<typeof profileSchema>) {
-  try {
-    const formData = new FormData();
-    formData.append("name", values.name);
+  async function onSubmit(values: z.infer<typeof profileSchema>) {
+    try {
+      const formData = new FormData();
+      formData.append("name", values.name);
 
-    if (selectedFile) {
-      formData.append("avatar", selectedFile);
+      if (selectedFile) {
+        formData.append("avatar", selectedFile);
+      }
+
+      const res = await updateProfileApi(formData);
+
+      if (res?.ok && res.data?.data?.user) {
+        toast.success(res.data.message);
+        setAuth({ token: token!, user: res.data.data.user });
+      } else {
+        toast.error(res?.error || "Failed to update profile");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
     }
-
-
-    const res = await updateProfileApi(formData);
-
-    if (res?.ok && res.data?.data?.user) {
-      toast.success(res.data.message);
-      setAuth({ token: token!, user: res.data.data.user });
-    } else {
-      toast.error(res?.error || "Failed to update profile");
-    }
-  } catch (error) {
-    console.log(error);
-    toast.error("Something went wrong");
   }
-}
 
   return (
     <div className="space-y-6">

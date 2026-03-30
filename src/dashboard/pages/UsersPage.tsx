@@ -12,7 +12,16 @@ import { activateUserApi, disableUserApi, getUsersApi } from "@/api/users";
 import type { User, UsersResponse } from "@/types/users";
 import { useState, useEffect } from "react";
 import { PaginationControls } from "@/components/products/Pagination";
-import { Loader2, UserCheck, UserX, Search, Shield, User as UserIcon, Eye, Star } from "lucide-react";
+import {
+  Loader2,
+  UserCheck,
+  UserX,
+  Search,
+  Shield,
+  User as UserIcon,
+  Eye,
+  Star,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/dashboard/components/ui/button";
 import { Input } from "@/dashboard/components/ui/input";
@@ -31,16 +40,18 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error: queryError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useQuery({
     queryKey: ["users", page, role],
     queryFn: () => getUsersApi(page, 10, role === "all" ? undefined : role),
   });
 
   // Add logging to debug the response structure
   useEffect(() => {
-    if (data) {
-      console.log("Users API Response:", data);
-    }
     if (isError) {
       console.error("Users API Error:", queryError);
       toast.error(queryError?.message || "Failed to fetch users.");
@@ -75,12 +86,16 @@ export default function UsersPage() {
   const apiResponse = data;
   const isApiOk = apiResponse?.ok;
   const responseBody = apiResponse?.data;
-  
+
   // Try to find the users array in common places
   // 1. responseBody.data (as seen in postman)
   // 2. responseBody (if the array is the root, though unlikely with success/message)
   let users: User[] = [];
-  if (responseBody && "data" in responseBody && Array.isArray((responseBody as UsersResponse).data)) {
+  if (
+    responseBody &&
+    "data" in responseBody &&
+    Array.isArray((responseBody as UsersResponse).data)
+  ) {
     users = (responseBody as UsersResponse).data;
   } else if (Array.isArray(responseBody)) {
     users = responseBody;
@@ -92,25 +107,35 @@ export default function UsersPage() {
     const name = u?.name || "";
     const email = u?.email || "";
     const searchTerm = search.toLowerCase();
-    return name.toLowerCase().includes(searchTerm) || 
-           email.toLowerCase().includes(searchTerm);
+    return (
+      name.toLowerCase().includes(searchTerm) ||
+      email.toLowerCase().includes(searchTerm)
+    );
   });
 
   const getRoleIcon = (role: string) => {
     switch (role.toLowerCase()) {
-      case "admin": return <Shield className="w-3 h-3" />;
-      case "moderator": return <Star className="w-3 h-3" />;
-      case "viewer": return <Eye className="w-3 h-3" />;
-      default: return <UserIcon className="w-3 h-3" />;
+      case "admin":
+        return <Shield className="w-3 h-3" />;
+      case "moderator":
+        return <Star className="w-3 h-3" />;
+      case "viewer":
+        return <Eye className="w-3 h-3" />;
+      default:
+        return <UserIcon className="w-3 h-3" />;
     }
   };
 
   const statusBadgeVariant = (status: string) => {
     switch (status.toLowerCase()) {
-      case "active": return "default";
-      case "pending": return "secondary";
-      case "disabled": return "destructive";
-      default: return "outline";
+      case "active":
+        return "default";
+      case "pending":
+        return "secondary";
+      case "disabled":
+        return "destructive";
+      default:
+        return "outline";
     }
   };
 
@@ -118,13 +143,15 @@ export default function UsersPage() {
     <div className="flex flex-col gap-6 p-2">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Users Management</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+            Users Management
+          </h1>
           <p className="text-muted-foreground mt-1">
             Manage your application users, their roles and access status.
           </p>
         </div>
         <div className="flex items-center gap-2">
-           <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
+          <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
             Total Users: {pagination?.total || 0}
           </Badge>
         </div>
@@ -133,8 +160,8 @@ export default function UsersPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white p-4 rounded-xl border shadow-sm">
         <div className="relative col-span-1 md:col-span-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search by name or email..." 
+          <Input
+            placeholder="Search by name or email..."
             className="pl-10 h-11"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -160,7 +187,9 @@ export default function UsersPage() {
         {isLoading ? (
           <div className="flex flex-col gap-4 p-8 justify-center items-center">
             <Loader2 className="h-12 w-12 animate-spin text-red-600" />
-            <p className="text-sm font-medium text-muted-foreground">Loading users...</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Loading users...
+            </p>
           </div>
         ) : !isApiOk ? (
           <div className="flex flex-col gap-4 p-8 justify-center items-center text-center">
@@ -168,10 +197,18 @@ export default function UsersPage() {
               <UserX className="h-8 w-8 text-red-600" />
             </div>
             <div>
-              <p className="text-lg font-bold text-gray-900">Failed to load users</p>
-              <p className="text-sm text-muted-foreground">{apiResponse?.error || "An unknown error occurred"}</p>
+              <p className="text-lg font-bold text-gray-900">
+                Failed to load users
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {apiResponse?.error || "An unknown error occurred"}
+              </p>
             </div>
-            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ["users"] })}>
+            <Button
+              onClick={() =>
+                queryClient.invalidateQueries({ queryKey: ["users"] })
+              }
+            >
               Try Again
             </Button>
           </div>
@@ -185,14 +222,19 @@ export default function UsersPage() {
                   <TableHead className="w-[150px]">Role</TableHead>
                   <TableHead className="w-[150px]">Status</TableHead>
                   <TableHead className="w-[150px]">Joined</TableHead>
-                  <TableHead className="w-[120px] text-right">Actions</TableHead>
+                  <TableHead className="w-[120px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
                 {filteredUsers.length > 0 ? (
                   filteredUsers.map((u) => (
-                    <TableRow key={u.id} className="group transition-colors hover:bg-muted/20">
+                    <TableRow
+                      key={u.id}
+                      className="group transition-colors hover:bg-muted/20"
+                    >
                       <TableCell>
                         <Avatar className="h-10 w-10 border">
                           <AvatarImage src={u.avatar || ""} alt={u.name} />
@@ -203,18 +245,27 @@ export default function UsersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="font-semibold text-gray-900">{u.name}</span>
-                          <span className="text-xs text-muted-foreground">{u.email}</span>
+                          <span className="font-semibold text-gray-900">
+                            {u.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {u.email}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 w-fit border border-slate-200">
                           {getRoleIcon(u.role)}
-                          <span className="text-xs font-semibold capitalize">{u.role}</span>
+                          <span className="text-xs font-semibold capitalize">
+                            {u.role}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={statusBadgeVariant(u.statue)} className="capitalize px-2.5 py-0.5">
+                        <Badge
+                          variant={statusBadgeVariant(u.statue)}
+                          className="capitalize px-2.5 py-0.5"
+                        >
                           {u.statue}
                         </Badge>
                       </TableCell>
@@ -257,7 +308,9 @@ export default function UsersPage() {
                         <div className="p-4 rounded-full bg-slate-50">
                           <UserIcon className="h-8 w-8 text-muted-foreground/50" />
                         </div>
-                        <p className="text-muted-foreground font-medium">No users found match your search.</p>
+                        <p className="text-muted-foreground font-medium">
+                          No users found match your search.
+                        </p>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -282,4 +335,3 @@ export default function UsersPage() {
     </div>
   );
 }
-

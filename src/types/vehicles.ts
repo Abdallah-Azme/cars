@@ -112,12 +112,25 @@ export type FiltersData = {
   years: string[];
   workingHours: string[];
   scores: string[];
+  results: string[];
 };
 
 export type FiltersResponse = {
   success: boolean;
   message: string;
   data: FiltersData;
+};
+
+export type ModelsData = {
+  models: { id: number; name: string }[];
+  types: { title: string; count: number }[];
+  results: string[];
+};
+
+export type ModelsResponse = {
+  success: boolean;
+  message: string;
+  data: ModelsData;
 };
 
 export const defaultFilters: FiltersData = {
@@ -128,4 +141,5 @@ export const defaultFilters: FiltersData = {
   years: [],
   workingHours: [],
   scores: [],
+  results: [],
 };

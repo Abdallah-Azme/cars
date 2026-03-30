@@ -121,6 +121,7 @@ export function ProductFilters({
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedResults, setSelectedResults] = useState<string[]>([]);
 
   const [yearFrom, setYearFrom] = useState<string>();
   const [yearTo, setYearTo] = useState<string>();
@@ -135,6 +136,7 @@ export function ProductFilters({
       models: selectedModels,
       types: selectedTypes,
       sizes: selectedSizes,
+      results: selectedResults,
       yearFrom,
       yearTo,
       hourFrom,
@@ -169,6 +171,7 @@ export function ProductFilters({
     setSelectedModels([]);
     setSelectedTypes([]);
     setSelectedSizes([]);
+    setSelectedResults([]);
     setYearFrom(undefined);
     setYearTo(undefined);
     setHourFrom(undefined);
@@ -310,6 +313,17 @@ export function ProductFilters({
             />
           </div>
         )}
+
+        <div className="space-y-3">
+            <SectionTitle title="Status" />
+            <ChecklistBox
+              items={["Sold", "Not Sold"]}
+              selectedItems={selectedResults}
+              onToggle={(value, checked) =>
+                toggleItem(value, checked, selectedResults, setSelectedResults, "results")
+              }
+            />
+          </div>
       </div>
     </div>
   );
