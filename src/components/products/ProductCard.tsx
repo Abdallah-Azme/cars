@@ -5,6 +5,8 @@ import type { VehicleData } from "@/types/vehicles";
 import { Link } from "react-router-dom";
 import AddToFavBtn from "./AddToFavBtn";
 
+import { ZoomDialog } from "./ZoomDialog";
+
 type Props = {
   isFavorite?: boolean;
   vehicle: VehicleData;
@@ -46,16 +48,22 @@ export function ProductCard({ vehicle }: Props) {
         {/* Middle: specs table + image */}
         <div className="flex flex-col gap-4">
           {/* Image */}
-          <Link
-            to={`/products/${vehicle?.id}`}
-            className="relative overflow-hidden rounded-md border bg-muted aspect-4/3"
+          <ZoomDialog
+            src={vehicle?.images?.[0]?.image_url || "/placeholder.svg"}
+            alt="product"
           >
-            <img
-              src={vehicle?.images?.[0]?.image_url || "/placeholder.svg"}
-              alt={"product"}
-              className="h-full w-full object-cover hover:scale-105 transition-all duration-300"
-            />
-          </Link>
+            <Link
+              to={`/products/${vehicle?.id}`}
+              className="relative block overflow-hidden rounded-md border bg-muted aspect-4/3 cursor-zoom-in group/item"
+            >
+              <img
+                src={vehicle?.images?.[0]?.image_url || "/placeholder.svg"}
+                alt="product"
+                className="h-full w-full object-cover transition-all duration-700 group-hover/item:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover/item:bg-black/10 transition-colors duration-300 pointer-events-none" />
+            </Link>
+          </ZoomDialog>
           {/* Specs */}
           <div className="rounded-md border bg-muted/20 overflow-hidden">
             <div className="grid grid-cols-[110px_1fr]">
