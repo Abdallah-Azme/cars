@@ -30,26 +30,31 @@ const FilterItem = ({ label, isSelected, onSelect, icon }: FilterItemProps) => {
     <div
       onClick={() => onSelect(!isSelected)}
       className={cn(
-        "group relative flex min-w-[150px] cursor-pointer flex-col items-center gap-4 rounded-2xl border-2 p-6 transition-all duration-300",
+        "group relative flex min-w-28 cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 p-2 transition-all duration-300",
         isSelected
-          ? "border-red-600 bg-red-50/50 shadow-md ring-2 ring-red-600/10"
+          ? "border-red-600 bg-red-50/50 shadow-md ring-2 ring-red-600/10 -translate-y-1"
           : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-lg hover:-translate-y-1",
       )}
     >
       <div
         className={cn(
-          "flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300 shadow-inner",
+          "relative flex size-12 items-center justify-center overflow-hidden rounded-xl transition-all duration-300 shadow-inner group-hover:shadow-md",
           isSelected
-            ? "bg-red-600 text-white rotate-3"
+            ? "bg-red-600 text-white shadow-red-200/50 rotate-3"
             : "bg-gray-50 text-gray-400 group-hover:bg-red-50 group-hover:text-red-500",
         )}
       >
-        {icon || <Package className="h-8 w-8" />}
+        <div className="p-3 transition-transform duration-500 group-hover:scale-110">
+          {icon || <Package className="h-6 w-6" />}
+        </div>
+        
+        {/* Shine overlay */}
+        <div className="absolute inset-0 bg-linear-to-tr from-white/0 via-white/5 to-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       </div>
 
       <span
         className={cn(
-          "text-center text-[11px] font-bold uppercase tracking-wider leading-tight",
+          "text-center text-[10px] font-bold uppercase drop-shadow-sm px-1 line-clamp-2 leading-tight",
           isSelected
             ? "text-red-700"
             : "text-gray-500 group-hover:text-gray-700",
@@ -58,14 +63,14 @@ const FilterItem = ({ label, isSelected, onSelect, icon }: FilterItemProps) => {
         {label}
       </span>
 
-      <div className="absolute right-3 top-3">
+      <div className="absolute right-1.5 top-1.5">
         <Checkbox
           checked={isSelected}
           onCheckedChange={(checked) => onSelect(!!checked)}
           className={cn(
-            "h-5 w-5 rounded-lg border-2 border-gray-200 transition-all duration-300",
+            "h-4 w-4 rounded-md border-2 border-gray-200 transition-all duration-300",
             isSelected &&
-              "border-red-600 bg-red-600 data-[state=checked]:bg-red-600 scale-110",
+              "border-red-600 bg-red-600 data-[state=checked]:bg-red-600 scale-110 shadow-sm shadow-red-400/30",
           )}
         />
       </div>
