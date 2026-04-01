@@ -22,10 +22,10 @@ export type VehicleFilterParams = {
 
 export const getVehiclesApi = (params?: VehicleFilterParams) => {
   const query = new URLSearchParams();
-  if (params?.makers?.length) params.makers.forEach((v) => query.append("selection_maker", v));
-  if (params?.models?.length) params.models.forEach((v) => query.append("selection_model", v));
-  if (params?.types?.length) params.types.forEach((v) => query.append("vehicle_type", v));
-  if (params?.sizes?.length) params.sizes.forEach((v) => query.append("vehicle_size", v));
+  if (params?.makers?.length) params.makers.forEach((v) => query.append("selection_maker[]", v));
+  if (params?.models?.length) params.models.forEach((v) => query.append("selection_model[]", v));
+  if (params?.types?.length) params.types.forEach((v) => query.append("vehicle_type[]", v));
+  if (params?.sizes?.length) params.sizes.forEach((v) => query.append("vehicle_size[]", v));
   if (params?.results?.length) params.results.forEach((v) => query.append("result[]", v));
   if (params?.parentCategoryIds?.length) params.parentCategoryIds.forEach((v) => query.append("parent_category_id[]", v));
   if (params?.childCategoryIds?.length) params.childCategoryIds.forEach((v) => query.append("child_category_id[]", v));

@@ -4,6 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import type { VehicleData } from "@/types/vehicles";
 import { Link } from "react-router-dom";
 import AddToFavBtn from "./AddToFavBtn";
+import { Button } from "@/components/ui/button";
+import { useSettingsStore } from "@/stores/settings";
+import { MessageCircle } from "lucide-react";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 import { ZoomDialog } from "./ZoomDialog";
 
@@ -23,6 +27,15 @@ export function ProductCard({ vehicle }: Props) {
     { label: "Size", value: vehicle?.vehicleSize },
     { label: "Inspection", value: vehicle?.inspection },
   ];
+
+  const { settings } = useSettingsStore();
+
+  const handleWhatsAppContact = () => {
+    const contact = settings?.whatsapp || settings?.phone;
+    const message = `Hello, I'm interested in the ${vehicle?.carMaker || ""} ${vehicle?.model || ""} (ID: ${vehicle?.id}). Could you provide more details?`;
+    const finalUrl = formatWhatsAppUrl(contact, message);
+    if (finalUrl) window.open(finalUrl, "_blank");
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -87,7 +100,8 @@ export function ProductCard({ vehicle }: Props) {
         <div className="flex w-full flex-col gap-2  ">
           <div className="text-xs text-muted-foreground">
             Start price
-            <span className="ml-2 text-sm font-semibold text-foreground">
+            <span className="ml-2 text-sm font-semibold text-foreground flex items-center gap-1">
+              <span className="text-[10px] opacity-70 font-bold italic">(¥) ين</span>
               {vehicle?.startPrice}
             </span>
           </div>
@@ -98,6 +112,25 @@ export function ProductCard({ vehicle }: Props) {
               {new Date(vehicle?.acceptancePeriod).toLocaleDateString()}
             </p>
           </div>
+
+          {settings?.whatsapp || settings?.phone ? (
+            <Button
+              onClick={handleWhatsAppContact}
+              className="w-full mt-2 bg-green-600 hover:bg-green-700 text-white gap-2 transition-all active:scale-95"
+            >
+              <MessageCircle className="size-4" />
+              Contact via WhatsApp
+            </Button>
+          ) : (
+            <Button
+              disabled
+              variant="outline"
+              className="w-full mt-2 gap-2"
+            >
+              <MessageCircle className="size-4" />
+              Contact Unavailable
+            </Button>
+          )}
         </div>
       </CardFooter>
     </Card>

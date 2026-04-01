@@ -1,11 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import AddToFavBtn from "@/components/products/AddToFavBtn";
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
+import { useSettingsStore } from "@/stores/settings";
 import {
   Card,
   CardContent,
   CardHeader
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { formatWhatsAppUrl } from "@/lib/utils";
 
 import EmailSubscription from "@/components/shared/EmailBox";
 import PageHeader from "@/components/shared/PageHeader";
@@ -23,12 +27,22 @@ import { getSingleVehicleApi } from "@/api/vehicles";
 
 export function SingleProductPage() {
   const { id } = useParams();
+  const { settings } = useSettingsStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ["vehicle", id],
     queryFn: () => getSingleVehicleApi(id!),
     enabled: !!id,
   });
+
+  const vehicle = data?.data?.data;
+
+  const handleWhatsAppContact = () => {
+    const contact = settings?.whatsapp || settings?.phone;
+    const message = `Hello, I'm interested in the ${vehicle?.maker || ""} ${vehicle?.model || ""} (ID: ${vehicle?.id}). Could you provide more details?`;
+    const finalUrl = formatWhatsAppUrl(contact, message);
+    if (finalUrl) window.open(finalUrl, "_blank");
+  };
 
   if (isLoading) {
     return (
@@ -37,8 +51,6 @@ export function SingleProductPage() {
       </div>
     );
   }
-
-  const vehicle = data?.data?.data;
 
   if (!vehicle) {
     return (
@@ -86,7 +98,25 @@ export function SingleProductPage() {
           </div>
 
           {/* Favorite + CTA */}
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            {settings?.whatsapp || settings?.phone ? (
+              <Button 
+                onClick={handleWhatsAppContact}
+                className="bg-green-600 hover:bg-green-700 text-white gap-2 transition-all active:scale-95"
+              >
+                <MessageCircle className="size-4" />
+                Contact on WhatsApp
+              </Button>
+            ) : (
+              <Button 
+                disabled
+                variant="outline"
+                className="gap-2"
+              >
+                <MessageCircle className="size-4" />
+                Contact Unavailable
+              </Button>
+            )}
             <AddToFavBtn id={vehicle.id} />
           </div>
         </div>
@@ -153,7 +183,10 @@ export function SingleProductPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="text-xs text-muted-foreground">Start price</div>
-                <div className="mt-1 text-lg font-semibold">{vehicle.startPrice}</div>
+                <div className="mt-1 text-lg font-semibold flex items-center gap-1">
+                  <span className="text-[10px] opacity-70 font-bold italic">(¥) ين</span>
+                  {vehicle.startPrice}
+                </div>
                 <Separator className="my-3" />
                 <div className="text-xs text-muted-foreground">Status</div>
                 <div className="mt-1 text-sm">{vehicle.status}</div>
